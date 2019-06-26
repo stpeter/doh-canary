@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+  <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+  <!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
+  <!ENTITY RFC6176 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6176.xml">
+  <!ENTITY RFC7858 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7858.xml">
+  <!ENTITY RFC8484 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8484.xml">
+  ]>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<?rfc sortrefs="yes"?>
+<?rfc strict="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="2"?>
+
+<rfc category="std" ipr="trust200902" docName="draft-grover-doh-canary-00">
+
+  <front>
+
+    <title abbrev="DNS Filtering Canary Domain"></title>
+
+    <author initials="A." surname="Andy" fullname="Grover">
+      <organization>Mozilla</organization>
+      <address>
+        <email>agrover@mozilla.com</email>
+        <uri>https://mozilla.com/</uri>
+      </address>
+    </author>
+
+    <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+      <organization>Mozilla</organization>
+      <address>
+        <phone>+1 720 256 6756</phone>
+        <email>stpeter@mozilla.com</email>
+        <uri>https://mozilla.com/</uri>
+      </address>
+    </author>
+
+    <date/>
+
+    <area>Applications</area>
+
+    <keyword>DNS</keyword>
+    <keyword>Special-Use Domain Names</keyword>
+    <keyword>DoH</keyword>
+    <keyword>DoT</keyword>
+
+    <abstract>
+      <t>This document specifies the behavior that is expected from the Domain Name System with regard to DNS queries for names ending with 'TBD.arpa.' and designates this domain as a special-use domain name.</t> 
+    </abstract>
+
+  </front>
+
+  <middle>
+
+  <section title="Introduction" anchor="intro">
+    <t>Content-control software filters (i.e., blocks) web requests that the user, the user's guardian, or the network operator deems objectionable or outside the usage policy of the network. Blocked resource categories can include advertisements, explicit content, known malware, and government-unapproved material, along with many others.</t>
+    <t>One way to implement content control that does not rely on software or settings on the end-user's computer is DNS-based content filtering, which examines a client's initial DNS request for the domain providing a resource and then either returns no result (NXDOMAIN) or returning an alternate result so that the user is presented with an explanation that filtering has taken place.</t>
+    <t>DNS-based content filtering is often built into a network's configured DNS recursive resolver. In addition to blocking a request, the software may also generate a log for use by the network administrators.</t>
+    <t>A network operator might wish to provide, or be obligated to provide, content filtering to users of its network. Because such filtering is often enforced by the network operator's DNS resolver, the use of a technology such as DNS over HTTPS <xref target="RFC8484"/> or DNS over TLS <xref target="RFC7858"/> can result in bypassing such content filtering. If the user agent can check for the presence of content filtering, this could be used as a signal that the network operator wishes its resolver to be used as a condition of using the network and that DoH or DoT should be disabled.</t>
+    <t>At present, there is no standardized mechanism for the user or user agent to identify the presence of content filtering on a network without making a request that could trigger content filtering and logging thereof, which could have undesirable side-effects.</t>
+    <t>Therefore, this document defines such a mechanism based on a so-called "canary domain" that is an instance of Special-Use Domain Names <xref target="RFC6176"/>. DNS requests for this domain would return different results when DNS-based content filtering is in place, allowing for the detection of filtering in a consistent way by user agents.</t>
+  </section>
+
+  <section title="Terminology" anchor="terms">
+    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
+  </section>
+
+  <section title="IANA Considerations" anchor="iana">
+    <t>IANA is requested to record the domain name 'TBD.arpa.' in the "Special-Use Domain Names" registry.</t>
+  </section>
+
+  <section title="Security Considerations" anchor="security">
+  </section>
+
+  </middle>
+
+  <back>
+
+    <references title="Normative References">
+
+      &RFC2119;
+      &RFC6176;
+      &RFC8174;
+
+    </references>
+
+    <references title="Informative References">
+
+      &RFC7858;
+      &RFC8484;
+
+    </references>
+
+    <section title="Acknowledgements" anchor="acks">
+      <t>Thanks to Martin Thomson for his feedback.</t>
+    </section>
+
+  </back>
+
+</rfc>
