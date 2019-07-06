@@ -20,7 +20,7 @@
 
   <front>
 
-    <title abbrev="DNS Content Filtering Detection Domain"></title>
+    <title abbrev="DNS Resolver-Based Policy Detection Domain"></title>
 
     <author initials="A." surname="Grover" fullname="Andy Grover">
       <organization>Mozilla</organization>
@@ -59,10 +59,10 @@
   <section title="Introduction" anchor="intro">
     <t>Content-control software can be used to filter (i.e., block) web requests that the user, the user's guardian, or the network operator deems objectionable or outside the usage policy of the network. Blocked resource categories can include advertisements, explicit content, known malware, and government-unapproved material, along with many others.</t>
     <t>One way to implement content control that does not rely on software or settings on the end-user's computing device is DNS-based content filtering, which examines a client's initial DNS request for the domain providing a resource and then either returns no result or returns an alternate result so that the user is presented with an explanation that filtering has taken place.</t>
-    <t>DNS-based content filtering is often built into a network's configured DNS recursive resolver. In addition to blocking a request, the resolver could also log the request for use by the network administrators.</t>
-    <t>A network operator might wish to provide, or might be obligated to provide, content filtering to users of its network. Because such filtering is often enforced by the network operator's default resolver, the use of a technology such as DNS over HTTPS (DoH) <xref target="RFC8484"/> or DNS over TLS (DoT) <xref target="RFC7858"/> can result in bypassing local policies. If the user agent can check for the presence of content filtering, this could be used as a signal that the network operator wishes its resolver to be used as a condition of using the network and that DoH or DoT should be disabled.</t>
-    <t>At present, there is no standardized mechanism for the user or user agent to identify the presence of content filtering on a network without making a request that could trigger content filtering and logging thereof, which could have undesirable side-effects.</t>
-    <t>Therefore, this document defines such a mechanism by defining a so-called "canary domain" that is an instance of Special-Use Domain Names <xref target="RFC6761"/>. DNS requests for this domain would return different results when DNS-based content filtering is in place, allowing for the detection of filtering in a consistent way by user agents.</t>
+    <t>DNS-based policy such as content filtering is often built into a network's configured DNS recursive resolver. In addition to blocking a request, the resolver may also log the request for use by the network administrators.</t>
+    <t>A network operator might wish to provide, or might be obligated to provide, a filtering policy to users of its network. Because such a policy is often enforced by the network operator's default resolver, the use of a technology such as DNS over HTTPS (DoH) <xref target="RFC8484"/> or DNS over TLS (DoT) <xref target="RFC7858"/> can result in bypassing local policies. If the user agent can check for the presence of a policy, this could be used as a signal that the network operator wishes its resolver to be used as a condition of using the network, and that DoH or DoT should be disabled.</t>
+    <t>At present, there is no standardized mechanism for the user or user agent to identify the presence of a policy on a network's default resolver without making a request that could trigger the policy and logging thereof, which could have undesirable side-effects.</t>
+    <t>Therefore, this document defines such a mechanism by defining a so-called "canary domain" that is an instance of Special-Use Domain Names <xref target="RFC6761"/>. DNS requests for this domain would return different results when a DNS-based policy is in place, allowing for the detection of the policy in a consistent way by user agents.</t>
   </section>
 
   <section title="Terminology" anchor="terms">
@@ -75,27 +75,27 @@
       <list style='symbols'>
         <t>Minimize the risk of exposing personal information</t>
         <t>Ensure that the canary request cannot be mistaken for a user-initiated DNS request</t>
-        <t>Ensure that the technique is not specific to any given user agent, filtering product, or resolver service</t>
-        <t>Ensure that the technique is easy to implement for user agents and filtering software</t>
+        <t>Ensure that the technique is not specific to any given user agent, policy, or resolver service</t>
+        <t>Ensure that the technique is easy to implement for user agents and resolvers</t>
       </list>
     </t>
   </section>
 
   <section title="Behavior" anchor="behavior">
-    <t>Filtering resolvers modify the result for the reserved domain 'TBD.arpa', which can be observed by clients to determine filtering is present.</t>
-    <t>If content filtering is present, the filtering resolver MUST return NXDOMAIN <xref target='RFC1035'/>. If content filtering is not present, DNS lookup will be successful (i.e., not NXDOMAIN).</t>
+    <t>Resolvers implementing a policy modify the result for the reserved domain 'TBD.arpa', which can be observed by clients to determine if a policy is present.</t>
+    <t>If a policy exists, the resolver MUST return NXDOMAIN <xref target='RFC1035'/>. If policy is not present, DNS lookup will be successful (i.e., not NXDOMAIN). (This could perhaps resolve to an actual host with a web page managed by IANA, similar to example.com <xref target='RFC6761'/>.)</t>
   </section>
 
   <section title="Domain Name Reservation Considerations" anchor="reservation">
     <t>This section specifies considerations for systems involved in domain name resolution when resolving queries for the reserved domain 'TBD.arpa', in accordance with <xref target='RFC6761'/>.</t>
     <t>
       <list style='numbers'>
-        <t>Users: Users may invoke command-line DNS lookup tools to resolve the domain, for the purposes of determining if DNS-based content filtering is present.</t>
-        <t>Application Software: Application software doing automated lookups are the primary targets of this domain name reservation. Applications can attempt to resolve this name in order to determine if DNS-based content filtering is present.</t>
-        <t>Name Resolution APIs and Libraries: Name resolution APIs and libraries SHOULD NOT recognize this name as special and SHOULD NOT treat it differently. Name resolution APIs SHOULD send queries for this name to their configured caching DNS server(s).</t>
-        <t>Caching DNS Servers: Caching servers MUST NOT treat this name as special, unless they perform content filtering, in which case they MUST return NXDOMAIN.</t>
+        <t>Users: Users may invoke command-line DNS lookup tools to resolve the domain, for the purposes of determining if a DNS-based policy is present.</t>
+        <t>Application Software: Application software doing automated lookups are the primary targets of this domain name reservation. Applications can attempt to resolve this name in order to determine if a DNS-based policy is present.</t>
+        <t>Name Resolution APIs and Libraries: Caching servers MUST NOT treat this name as special, unless they implement a policy, in which case they MUST return NXDOMAIN.</t>
+        <t>Caching DNS Servers: Caching servers MUST NOT treat this name as special, unless they implement a policy, in which case they MUST return NXDOMAIN.</t>
         <t>Authoritative DNS Servers: Authoritative servers other than those supporting the '.arpa' TLD MUST respond to queries for this name with NXDOMAIN.</t>
-        <t>DNS Server Operators: Operators SHOULD ensure that any content-filtering caching DNS server on their network properly responds to this name with NXDOMAIN.</t>
+        <t>DNS Server Operators: Operators SHOULD ensure that any caching DNS server with a policy on their network properly responds to this name with NXDOMAIN.</t>
         <t>DNS Registries/Registrars: The defined name is a subdomain of the '.arpa' top-level domain, which is operated by IANA under the authority of the Internet Architecture Board according to the rules established in <xref target='RFC3172'/>. There are no other registrars for '.arpa'.</t>
       </list>
     </t>
@@ -103,11 +103,11 @@
 
   <section title="IANA Considerations" anchor="iana">
     <t>IANA is requested to record the domain name 'TBD.arpa' in the "Special-Use Domain Names" registry. See <xref target='reservation'/> for the completed registration template.</t>
-    <t>[[NOTE TO RFC EDITOR: please change `TBD` to the name assigned by IANA. The name 'dns-content-filtering-detection' is suggested.]]</t>
+    <t>[[NOTE TO RFC EDITOR: please change `TBD` to the name assigned by IANA. The name 'dns-content-policy-detection' is suggested.]]</t>
   </section>
 
   <section title="Security Considerations" anchor="security">
-    <t>Although a DNS resolution request for the 'TBD.arpa' domain can reveal whether the user or application wishes to detect the presence of DNS-based content filtering, such a request is relatively neutral compared to a request for a domain that might be subject to such filtering.</t>
+    <t>Although a DNS resolution request for the 'TBD.arpa' domain can reveal whether the user or application wishes to detect the presence of DNS-based policy, such a request is relatively neutral compared to a request for a domain that might be subject to a policy.</t>
   </section>
 
   </middle>
