@@ -75,15 +75,15 @@ Table of Contents
 
 1.  Introduction
 
-   Content-control software filters (i.e., blocks) web requests that the
-   user, the user's guardian, or the network operator deems
-   objectionable or outside the usage policy of the network.  Blocked
-   resource categories can include advertisements, explicit content,
-   known malware, and government-unapproved material, along with many
-   others.
+   Content-control software can be used to filter (i.e., block) web
+   requests that the user, the user's guardian, or the network operator
+   deems objectionable or outside the usage policy of the network.
+   Blocked resource categories can include advertisements, explicit
+   content, known malware, and government-unapproved material, along
+   with many others.
 
    One way to implement content control that does not rely on software
-   or settings on the end-user's computer is DNS-based content
+   or settings on the end-user's computing device is DNS-based content
    filtering, which examines a client's initial DNS request for the
    domain providing a resource and then either returns no result or
    returns an alternate result so that the user is presented with an
@@ -94,15 +94,15 @@ Table of Contents
    request, the resolver could also log the request for use by the
    network administrators.
 
-   A network operator might wish to provide, or be obligated to provide,
-   content filtering to users of its network.  Because such filtering is
-   often enforced by the network operator's default resolver, the use of
-   a technology such as DNS over HTTPS [RFC8484] or DNS over TLS
-   [RFC7858] can result in bypassing local policies.  If the user agent
-   can check for the presence of content filtering, this could be used
-   as a signal that the network operator wishes its resolver to be used
-   as a condition of using the network and that DoH or DoT should be
-   disabled.
+   A network operator might wish to provide, or might be obligated to
+   provide, content filtering to users of its network.  Because such
+   filtering is often enforced by the network operator's default
+   resolver, the use of a technology such as DNS over HTTPS (DoH)
+   [RFC8484] or DNS over TLS (DoT) [RFC7858] can result in bypassing
+   local policies.  If the user agent can check for the presence of
+   content filtering, this could be used as a signal that the network
+   operator wishes its resolver to be used as a condition of using the
+   network and that DoH or DoT should be disabled.
 
    At present, there is no standardized mechanism for the user or user
    agent to identify the presence of content filtering on a network
@@ -117,7 +117,7 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
    without making a request that could trigger content filtering and
    logging thereof, which could have undesirable side-effects.
 
-   Therefore, this document defines such a mechanism based on a so-
+   Therefore, this document defines such a mechanism by defining a so-
    called "canary domain" that is an instance of Special-Use Domain
    Names [RFC6761].  DNS requests for this domain would return different
    results when DNS-based content filtering is in place, allowing for
@@ -144,7 +144,7 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
    o  Ensure that the technique is not specific to any given user agent,
       filtering product, or resolver service
 
-   o  Ensure that the technique is implement for user agents and
+   o  Ensure that the technique is easy to implement for user agents and
       filtering software
 
 4.  Behavior
@@ -154,8 +154,8 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
    is present.
 
    If content filtering is present, the filtering resolver MUST return
-   NXDOMAIN [RFC1035].  If not present, DNS lookup will be successful
-   (i.e. not NXDOMAIN).
+   NXDOMAIN [RFC1035].  If content filtering is not present, DNS lookup
+   will be successful (i.e., not NXDOMAIN).
 
 5.  Domain Name Reservation Considerations
 
@@ -189,7 +189,7 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
        they MUST return NXDOMAIN.
 
    5.  Authoritative DNS Servers: Authoritative servers other than those
-       supporting the .arpa TLD MUST respond to queries for this name
+       supporting the '.arpa' TLD MUST respond to queries for this name
        with NXDOMAIN.
 
    6.  DNS Server Operators: Operators SHOULD ensure that any content-
@@ -197,14 +197,14 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
        to this name with NXDOMAIN.
 
    7.  DNS Registries/Registrars: The defined name is a subdomain of the
-       'arpa' top-level domain, which is operated by IANA under the
+       '.arpa' top-level domain, which is operated by IANA under the
        authority of the Internet Architecture Board according to the
        rules established in [RFC3172].  There are no other registrars
        for '.arpa'.
 
 6.  IANA Considerations
 
-   IANA is requested to record the domain name 'TBD.arpa.' in the
+   IANA is requested to record the domain name 'TBD.arpa' in the
    "Special-Use Domain Names" registry.  See Section 5 for the completed
    registration template.
 
