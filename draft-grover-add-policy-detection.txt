@@ -8,7 +8,7 @@ Intended status: Standards Track                                 Mozilla
 Expires: January 9, 2020                                    July 8, 2019
 
 
-                       draft-grover-doh-canary-00
+                  draft-grover-add-policy-detection-00
 
 Abstract
 
@@ -55,7 +55,7 @@ Copyright Notice
 
 Grover & Saint-Andre     Expires January 9, 2020                [Page 1]
 
-Internet-Draft   DNS Content Filtering Detection Domain        July 2019
+Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
 
 
 Table of Contents
@@ -64,14 +64,14 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  Design Goals and Constraints  . . . . . . . . . . . . . . . .   3
    4.  Behavior  . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  Domain Name Reservation Considerations  . . . . . . . . . . .   3
+   5.  Domain Name Reservation Considerations  . . . . . . . . . . .   4
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
      8.2.  Informative References  . . . . . . . . . . . . . . . . .   5
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   5
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   5
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   6
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
@@ -89,39 +89,39 @@ Table of Contents
    returns an alternate result so that the user is presented with an
    explanation that filtering has taken place.
 
-   DNS-based content filtering is often built into a network's
-   configured DNS recursive resolver.  In addition to blocking a
-   request, the resolver could also log the request for use by the
+   DNS-based policy such as content filtering is often built into a
+   network's configured DNS recursive resolver.  In addition to blocking
+   a request, the resolver may also log the request for use by the
    network administrators.
 
    A network operator might wish to provide, or might be obligated to
-   provide, content filtering to users of its network.  Because such
-   filtering is often enforced by the network operator's default
-   resolver, the use of a technology such as DNS over HTTPS (DoH)
-   [RFC8484] or DNS over TLS (DoT) [RFC7858] can result in bypassing
-   local policies.  If the user agent can check for the presence of
-   content filtering, this could be used as a signal that the network
-   operator wishes its resolver to be used as a condition of using the
-   network and that DoH or DoT should be disabled.
+   provide, a filtering policy to users of its network.  Because such a
+   policy is often enforced by the network operator's default resolver,
+   the use of a technology such as DNS over HTTPS (DoH) [RFC8484] or DNS
+   over TLS (DoT) [RFC7858] can result in bypassing local policies.  If
+   the user agent can check for the presence of a policy, this could be
+   used as a signal that the network operator wishes its resolver to be
+   used as a condition of using the network, and that DoH or DoT should
+   be disabled.
 
    At present, there is no standardized mechanism for the user or user
-   agent to identify the presence of content filtering on a network
+   agent to identify the presence of a policy on a network's default
 
 
 
 Grover & Saint-Andre     Expires January 9, 2020                [Page 2]
 
-Internet-Draft   DNS Content Filtering Detection Domain        July 2019
+Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
 
 
-   without making a request that could trigger content filtering and
+   resolver without making a request that could trigger the policy and
    logging thereof, which could have undesirable side-effects.
 
    Therefore, this document defines such a mechanism by defining a so-
    called "canary domain" that is an instance of Special-Use Domain
    Names [RFC6761].  DNS requests for this domain would return different
-   results when DNS-based content filtering is in place, allowing for
-   the detection of filtering in a consistent way by user agents.
+   results when a DNS-based policy is in place, allowing for the
+   detection of the policy in a consistent way by user agents.
 
 2.  Terminology
 
@@ -142,20 +142,33 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
       initiated DNS request
 
    o  Ensure that the technique is not specific to any given user agent,
-      filtering product, or resolver service
+      policy, or resolver service
 
    o  Ensure that the technique is easy to implement for user agents and
-      filtering software
+      resolvers
 
 4.  Behavior
 
-   Filtering resolvers modify the result for the reserved domain
-   'TBD.arpa', which can be observed by clients to determine filtering
-   is present.
+   Resolvers implementing a policy modify the result for the reserved
+   domain 'TBD.arpa', which can be observed by clients to determine if a
+   policy is present.
 
-   If content filtering is present, the filtering resolver MUST return
-   NXDOMAIN [RFC1035].  If content filtering is not present, DNS lookup
-   will be successful (i.e., not NXDOMAIN).
+   If a policy exists, the resolver MUST return NXDOMAIN [RFC1035].  If
+   policy is not present, DNS lookup will be successful (i.e., not
+   NXDOMAIN).  (This could perhaps resolve to an actual host with a web
+   page managed by IANA, similar to example.com [RFC6761].)
+
+
+
+
+
+
+
+
+Grover & Saint-Andre     Expires January 9, 2020                [Page 3]
+
+Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
+
 
 5.  Domain Name Reservation Considerations
 
@@ -163,38 +176,30 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
    name resolution when resolving queries for the reserved domain
    'TBD.arpa', in accordance with [RFC6761].
 
-
-
-Grover & Saint-Andre     Expires January 9, 2020                [Page 3]
-
-Internet-Draft   DNS Content Filtering Detection Domain        July 2019
-
-
    1.  Users: Users may invoke command-line DNS lookup tools to resolve
-       the domain, for the purposes of determining if DNS-based content
-       filtering is present.
+       the domain, for the purposes of determining if a DNS-based policy
+       is present.
 
    2.  Application Software: Application software doing automated
        lookups are the primary targets of this domain name reservation.
        Applications can attempt to resolve this name in order to
-       determine if DNS-based content filtering is present.
+       determine if a DNS-based policy is present.
 
-   3.  Name Resolution APIs and Libraries: Name resolution APIs and
-       libraries SHOULD NOT recognize this name as special and SHOULD
-       NOT treat it differently.  Name resolution APIs SHOULD send
-       queries for this name to their configured caching DNS server(s).
+   3.  Name Resolution APIs and Libraries: Caching servers MUST NOT
+       treat this name as special, unless they implement a policy, in
+       which case they MUST return NXDOMAIN.
 
    4.  Caching DNS Servers: Caching servers MUST NOT treat this name as
-       special, unless they perform content filtering, in which case
-       they MUST return NXDOMAIN.
+       special, unless they implement a policy, in which case they MUST
+       return NXDOMAIN.
 
    5.  Authoritative DNS Servers: Authoritative servers other than those
        supporting the '.arpa' TLD MUST respond to queries for this name
        with NXDOMAIN.
 
-   6.  DNS Server Operators: Operators SHOULD ensure that any content-
-       filtering caching DNS server on their network properly responds
-       to this name with NXDOMAIN.
+   6.  DNS Server Operators: Operators SHOULD ensure that any caching
+       DNS server with a policy on their network properly responds to
+       this name with NXDOMAIN.
 
    7.  DNS Registries/Registrars: The defined name is a subdomain of the
        '.arpa' top-level domain, which is operated by IANA under the
@@ -209,22 +214,24 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
    registration template.
 
    [[NOTE TO RFC EDITOR: please change `TBD` to the name assigned by
-   IANA.  The name 'dns-content-filtering-detection' is suggested.]]
+   IANA.  The name 'dns-content-policy-detection' is suggested.]]
 
-7.  Security Considerations
 
-   Although a DNS resolution request for the 'TBD.arpa' domain can
-   reveal whether the user or application wishes to detect the presence
-   of DNS-based content filtering, such a request is relatively neutral
-   compared to a request for a domain that might be subject to such
-   filtering.
+
 
 
 
 Grover & Saint-Andre     Expires January 9, 2020                [Page 4]
 
-Internet-Draft   DNS Content Filtering Detection Domain        July 2019
+Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
 
+
+7.  Security Considerations
+
+   Although a DNS resolution request for the 'TBD.arpa' domain can
+   reveal whether the user or application wishes to detect the presence
+   of DNS-based policy, such a request is relatively neutral compared to
+   a request for a domain that might be subject to a policy.
 
 8.  References
 
@@ -263,6 +270,18 @@ Internet-Draft   DNS Content Filtering Detection Domain        July 2019
               (DoH)", RFC 8484, DOI 10.17487/RFC8484, October 2018,
               <https://www.rfc-editor.org/info/rfc8484>.
 
+
+
+
+
+
+
+
+Grover & Saint-Andre     Expires January 9, 2020                [Page 5]
+
+Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
+
+
 Appendix A.  Acknowledgements
 
    Thanks to Martin Thomson for his feedback.
@@ -276,31 +295,12 @@ Authors' Addresses
    URI:   https://mozilla.com/
 
 
-
-Grover & Saint-Andre     Expires January 9, 2020                [Page 5]
-
-Internet-Draft   DNS Content Filtering Detection Domain        July 2019
-
-
    Peter Saint-Andre
    Mozilla
 
    Phone: +1 720 256 6756
    Email: stpeter@mozilla.com
    URI:   https://mozilla.com/
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
