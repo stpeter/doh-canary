@@ -22,7 +22,7 @@
 
     <title abbrev="DNS Content Filtering Detection Domain"></title>
 
-    <author initials="A." surname="Andy" fullname="Grover">
+    <author initials="A." surname="Grover" fullname="Andy Grover">
       <organization>Mozilla</organization>
       <address>
         <email>agrover@mozilla.com</email>
