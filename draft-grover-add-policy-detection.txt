@@ -8,6 +8,7 @@ Intended status: Standards Track                                 Mozilla
 Expires: January 9, 2020                                    July 8, 2019
 
 
+               DNS Resolver-Based Policy Detection Domain
                   draft-grover-add-policy-detection-00
 
 Abstract
@@ -52,10 +53,9 @@ Copyright Notice
 
 
 
-
 Grover & Saint-Andre     Expires January 9, 2020                [Page 1]
 
-Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
+Internet-Draft           Policy Detection Domain               July 2019
 
 
 Table of Contents
@@ -111,7 +111,7 @@ Table of Contents
 
 Grover & Saint-Andre     Expires January 9, 2020                [Page 2]
 
-Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
+Internet-Draft           Policy Detection Domain               July 2019
 
 
    resolver without making a request that could trigger the policy and
@@ -167,7 +167,7 @@ Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
 
 Grover & Saint-Andre     Expires January 9, 2020                [Page 3]
 
-Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
+Internet-Draft           Policy Detection Domain               July 2019
 
 
 5.  Domain Name Reservation Considerations
@@ -223,7 +223,7 @@ Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
 
 Grover & Saint-Andre     Expires January 9, 2020                [Page 4]
 
-Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
+Internet-Draft           Policy Detection Domain               July 2019
 
 
 7.  Security Considerations
@@ -279,7 +279,7 @@ Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
 
 Grover & Saint-Andre     Expires January 9, 2020                [Page 5]
 
-Internet-Draft DNS Resolver-Based Policy Detection Domain      July 2019
+Internet-Draft           Policy Detection Domain               July 2019
 
 
 Appendix A.  Acknowledgements

@@ -20,7 +20,7 @@
 
   <front>
 
-    <title abbrev="DNS Resolver-Based Policy Detection Domain"></title>
+    <title abbrev="Policy Detection Domain">DNS Resolver-Based Policy Detection Domain</title>
 
     <author initials="A." surname="Grover" fullname="Andy Grover">
       <organization>Mozilla</organization>
